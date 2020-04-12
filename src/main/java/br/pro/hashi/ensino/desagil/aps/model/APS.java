@@ -11,7 +11,7 @@ public class APS {
         // criar um novo gate, basta criar a
         // respectiva classe e adicionar uma linha abaixo.
         LinkedList<Gate> model = new LinkedList<>();
-        //model.add(new NotGate());
+        model.add(new NotGate());
         model.add(new NandGate());
         model.add(new OrGate());
         model.add(new AndGate());
