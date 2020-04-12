@@ -1,5 +1,4 @@
-package br.pro.hashi.ensino.desagil.crossover.view;
-
+package br.pro.hashi.ensino.desagil.aps.model;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -13,21 +12,21 @@ import java.util.LinkedList;
 public class View extends JPanel implements ActionListener {
 
     // A ideia é que essa componente gráfica mostre um menu
-    // que permite selecionar uma calculadora e também mostre
-    // a representação gráfica da calculadora atualmente
-    // selecionada. Esse menu é uma instância de JComboBox
+    // que permite selecionar um gate e também mostre
+    // a representação gráfica do gate atualmente
+    // selecionado. Esse menu é uma instância de JComboBox
     // e essa representação gráfica da calculadora é uma
-    // instância da classe CalculatorView, que você já leu.
-    private final JComboBox<Calculator> menu;
-    private br.pro.hashi.ensino.desagil.crossover.view.CalculatorView calculatorView;
+    // instância da classe GateView, que você já leu.
+    private final JComboBox<Gate> menu;
+    private GateView gateView;
 
-    // O construtor recebe uma lista de calculadoras, que
+    // O construtor recebe uma lista de gates, que
     // devem ser adicionadas ao menu. O menu consegue mostrar
-    // os nomes das calculadoras graças ao método toString.
-    public View(LinkedList<Calculator> model) {
+    // os nomes dos gates graças ao método toString.
+    public View(LinkedList<Gate> model) {
         menu = new JComboBox<>();
-        for (Calculator calculator : model) {
-            menu.addItem(calculator);
+        for (Gate gate : model) {
+            menu.addItem(gate);
         }
 
         // Um JPanel tem um layout, ou seja, um padrão para
@@ -37,11 +36,11 @@ public class View extends JPanel implements ActionListener {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         // Vamos adicionar a este JPanel o menu e a representação
-        // gráfica da calculadora atualmente selecionada, que é
+        // gráfica do gate atualmente selecionado, que é
         // a primeira. Como sempre, a contagem começa de zero.
-        // A implementação de addCalculatorView está logo abaixo.
+        // A implementação de addGateView está logo abaixo.
         add(menu);
-        addCalculatorView(0);
+        addGateView(0);
 
         // Um menu tem uma lista de observadores que reagem
         // quando o usuário selecionar algum item. Usamos o
@@ -54,18 +53,18 @@ public class View extends JPanel implements ActionListener {
     }
 
     // Este método é responsável por adicionar a este JPanel a
-    // representação gráfica da calculadora identificada por
+    // representação gráfica do gate identificado por
     // um índice. Isso consiste em três passos simples.
-    private void addCalculatorView(int index) {
+    private void addGateView(int index) {
 
-        // 1. Usar o índice para pegar a calculadora do menu.
-        Calculator calculator = menu.getItemAt(index);
+        // 1. Usar o índice para pegar o gate do menu.
+        Gate gate = menu.getItemAt(index);
 
         // 2. Construir a representação gráfica a partir dela.
-        calculatorView = new br.pro.hashi.ensino.desagil.crossover.view.CalculatorView(calculator);
+        gateView = new GateView(gate);
 
         // 3. Adicionar essa representação gráfica no JPanel.
-        add(calculatorView);
+        add(gateView);
     }
 
     // O que esta componente deve fazer quando o usuário
@@ -73,14 +72,14 @@ public class View extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent event) {
 
-        // ...tirar a atual representação gráfica de calculadora...
-        remove(calculatorView);
+        // ...tirar a atual representação gráfica de gate...
+        remove(gateView);
 
-        // ...descobrir qual é o índice da calculadora selecionada...
+        // ...descobrir qual é o índice do gate selecionada...
         int index = menu.getSelectedIndex();
 
         // ...e usar o método acima para adicionar a nova.
-        addCalculatorView(index);
+        addGateView(index);
 
         // Mantenha esta linha, mas não precisa entendê-la.
         // É necessária para evitar bugs em alguns sistemas.
