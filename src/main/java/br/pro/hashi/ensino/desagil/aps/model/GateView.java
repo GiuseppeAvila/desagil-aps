@@ -72,6 +72,19 @@ public class GateView extends JPanel implements ActionListener {
 
     private void update() {
 
+        Switch input1 = new Switch();
+        Switch input2 = new Switch();
+
+        if (gateInputField1.isSelected()){
+            input1.turnOn();
+        }
+        if (gateInputField2.isSelected()){
+            input2.turnOn();
+        }
+
+        gate.connect(0,input1 );
+        gate.connect(1, input2);
+
         boolean result = gate.read();
 
         gateOutputField.setSelected(result);
