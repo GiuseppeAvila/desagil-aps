@@ -1,14 +1,18 @@
 package br.pro.hashi.ensino.desagil.aps.model;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.net.URL;
 
 // A classe JPanel representa uma das componentes mais
 // simples da Swing. A função dela é simplesmente ser
 // um contêiner para colocar outras componentes dentro.
 // A razão de implementar ActionListener está mais abaixo.
-public class GateView extends JPanel implements ActionListener {
+public class GateView extends FixedPanel implements ActionListener, MouseListener {
 
     // A ideia é que essa componente gráfica represente
     // um gate específico. Esse gate que está
@@ -19,8 +23,14 @@ public class GateView extends JPanel implements ActionListener {
     private final JCheckBox gateInputField1;
     private final JCheckBox gateInputField2;
     private final JCheckBox gateOutputField;
+    // Novos atributos necessários para esta versão da interface.
+    private final Image image;
+    private Color color;
+    private Light light;
 
     public GateView(Gate gate) {
+        super(320,133);
+
         this.gate = gate;
 
         // Nada de especial na construção dos campos.
@@ -33,23 +43,28 @@ public class GateView extends JPanel implements ActionListener {
         // interface para identificar alguma coisa. Não
         // precisa ser atributo, pois não precisamos mais
         // mexer nesses objetos depois de criar e adicionar.
-        JLabel gateInputLabel = new JLabel("Entrada:");
-        JLabel gateOutputLabel = new JLabel("Saida:");
 
-        // Um JPanel tem um layout, ou seja, um padrão para
-        // organizar as componentes dentro dele. A linha abaixo
-        // estabelece um dos padrões mais simples: simplesmente
-        // colocar uma componente debaixo da outra, alinhadas.
-        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        // Não há mais a chamada de setLayout, pois ela agora
+        // acontece no construtor da superclasse FixedPanel.
+
 
         // Colocamos todas componentes aqui no contêiner.
-        add(gateInputLabel);
-        add(gateInputField1);
         if (gate.toString() != "NOT") {
-            add(gateInputField2);
+            add(gateInputField1,20, 30, 20,20);
+            add(gateInputField2, 20, 80, 20,20);
+        }else{
+            add(gateInputField1,20, 55, 20,20);
         }
-        add(gateOutputLabel);
-        add(gateOutputField);
+
+        add(gateOutputField, 270, 35, 20, 20);
+
+        color = Color.BLACK;
+
+        String name = gate.toString() + ".png";
+        URL url = getClass().getClassLoader().getResource(name);
+        image = getToolkit().getImage(url);
+
 
         // Um checkbox tem uma lista de observadores que
         // reagem quando o usuário dá Enter depois de digitar.
@@ -69,7 +84,9 @@ public class GateView extends JPanel implements ActionListener {
         // último campo de acordo com os valores dos primeiros.
         // Precisamos chamar esse método no final da construção
         // para garantir que a interface não nasce inconsistente.
+        addMouseListener(this);
         update();
+
     }
 
     private void update() {
@@ -92,14 +109,73 @@ public class GateView extends JPanel implements ActionListener {
 
         gate.connect(0, input1);
 
+        //light.connect(0, gate);
+        //light.getColor();
 
         boolean result = gate.read();
-
         gateOutputField.setSelected(result);
+
     }
 
     @Override
     public void actionPerformed(ActionEvent event) {
         update();
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent mouseEvent) {
+        // Descobre em qual posição o clique ocorreu.
+        int x = mouseEvent.getX();
+        int y = mouseEvent.getY();
+
+        // Se o clique foi dentro do quadrado colorido...
+        if (x >= 255 && x < 295 && y >= 30 && y < 80) {
+
+            // ...então abrimos a janela seletora de cor...
+            color = JColorChooser.showDialog(this, null, color);
+
+            // ...e chamamos repaint para atualizar a tela.
+            repaint();
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent mouseEvent) {
+
+    }
+    @Override
+    public void paintComponent(Graphics g) {
+
+        // Não podemos esquecer desta linha, pois não somos os
+        // únicos responsáveis por desenhar o painel, como era
+        // o caso nos Desafios. Agora é preciso desenhar também
+        // componentes internas, e isso é feito pela superclasse.
+        super.paintComponent(g);
+
+        // Desenha a imagem, passando sua posição e seu tamanho.
+        g.drawImage(image, 0, 0, 320, 133, this);
+
+        // Desenha um quadrado cheio.
+        g.setColor(color);
+        g.fillOval(270, 55, 25, 25);
+
+        // Linha necessária para evitar atrasos
+        // de renderização em sistemas Linux.
+        getToolkit().sync();
     }
 }
