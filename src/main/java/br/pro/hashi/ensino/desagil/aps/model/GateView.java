@@ -45,7 +45,9 @@ public class GateView extends JPanel implements ActionListener {
         // Colocamos todas componentes aqui no contêiner.
         add(gateInputLabel);
         add(gateInputField1);
-        add(gateInputField2);
+        if (gate.toString() != "NOT") {
+            add(gateInputField2);
+        }
         add(gateOutputLabel);
         add(gateOutputField);
 
@@ -73,17 +75,23 @@ public class GateView extends JPanel implements ActionListener {
     private void update() {
 
         Switch input1 = new Switch();
-        Switch input2 = new Switch();
 
-        if (gateInputField1.isSelected()){
+        if (gate.toString() != "NOT") {
+            Switch input2 = new Switch();
+            if (gateInputField2.isSelected()) {
+                input2.turnOn();
+            }
+            gate.connect(1, input2);
+        }
+
+
+        if (gateInputField1.isSelected()) {
             input1.turnOn();
         }
-        if (gateInputField2.isSelected()){
-            input2.turnOn();
-        }
 
-        gate.connect(0,input1 );
-        gate.connect(1, input2);
+
+        gate.connect(0, input1);
+
 
         boolean result = gate.read();
 
