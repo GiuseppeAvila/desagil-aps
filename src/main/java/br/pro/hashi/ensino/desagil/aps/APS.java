@@ -1,4 +1,7 @@
-package br.pro.hashi.ensino.desagil.aps.model;
+package br.pro.hashi.ensino.desagil.aps;
+
+import br.pro.hashi.ensino.desagil.aps.model.*;
+import br.pro.hashi.ensino.desagil.aps.view.View;
 
 import javax.swing.*;
 import java.util.LinkedList;

@@ -1,6 +1,7 @@
 package br.pro.hashi.ensino.desagil.aps.model;
 
 public class NotGate extends Gate {
+
     private final NandGate nand;
 
     public NotGate() {

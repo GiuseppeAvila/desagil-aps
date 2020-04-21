@@ -1,4 +1,8 @@
-package br.pro.hashi.ensino.desagil.aps.model;
+package br.pro.hashi.ensino.desagil.aps.view;
+
+import br.pro.hashi.ensino.desagil.aps.model.Gate;
+import br.pro.hashi.ensino.desagil.aps.model.Light;
+import br.pro.hashi.ensino.desagil.aps.model.Switch;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +19,9 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
     private final JCheckBox gateInputField1;
     private final JCheckBox gateInputField2;
 
+    private final Switch input1;
+    private final Switch input2;
+
     private final Image image;
     private final Light light;
 
@@ -29,12 +36,18 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
         gateInputField1 = new JCheckBox();
         gateInputField2 = new JCheckBox();
 
-        if (!gate.toString().equals("NOT")) {
+        input1 = new Switch();
+        input2 = new Switch();
+
+        if (this.gate.getInputSize() == 1) {
+            add(gateInputField1, 20, 55, 20, 20);
+        } else {
             add(gateInputField1, 20, 30, 20, 20);
             add(gateInputField2, 20, 80, 20, 20);
-        } else {
-            add(gateInputField1, 20, 55, 20, 20);
         }
+
+        this.gate.connect(0, input1);
+        light.connect(0, gate);
 
         String name = gate.toString() + ".png";
         URL url = getClass().getClassLoader().getResource(name);
@@ -50,23 +63,20 @@ public class GateView extends FixedPanel implements ActionListener, MouseListene
 
     private void update() {
 
-        Switch input1 = new Switch();
-
-        if (!gate.toString().equals("NOT")) {
-            Switch input2 = new Switch();
+        if (gate.getInputSize() != 1) {
             if (gateInputField2.isSelected()) {
                 input2.turnOn();
+            } else {
+                input2.turnOff();
             }
             gate.connect(1, input2);
         }
 
         if (gateInputField1.isSelected()) {
             input1.turnOn();
+        } else {
+            input1.turnOff();
         }
-
-        gate.connect(0, input1);
-
-        light.connect(0, gate);
 
         repaint();
 
